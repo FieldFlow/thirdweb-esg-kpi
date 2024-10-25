@@ -15,6 +15,11 @@ const contract = getContract({
     address: "0x33c06A3610D58df2D6c3A8F24063b9b4DEEdB283"
 });
 
+// @ts-ignore
+const isNumber = value => {
+    return typeof value === 'number' && isFinite(value);
+}
+
 // Utility function to convert string to uint256
 // @ts-ignore
 const stringToUint256 = (str) => {
@@ -26,14 +31,19 @@ const stringToUint256 = (str) => {
 const uint256ToString = (uint256) => {
     try {
         const hexString = ethers.BigNumber.from(uint256).toHexString();
-        const bytes32Hex = ethers.utils.hexZeroPad(hexString, 32);
-        return ethers.utils.parseBytes32String(bytes32Hex);
+        return ethers.utils.parseBytes32String(hexString);
     } catch (err) {
-        console.error('Error converting uint256 to string:', err);
-        return "Invalid Data";
+        const probablyNumber = ethers.BigNumber.from(uint256).toNumber()
+        console.debug("probablyNumber", probablyNumber)
+        if (isNumber(probablyNumber)){
+            return probablyNumber;
+        }
+        else{
+            console.error('Error converting uint256 to string:', err);
+            return "Invalid data";
+        }
     }
 };
-
 
 // KPI identifiers mapped to their corresponding strings and uint256 IDs
 const kpiIdentifiers = {
@@ -138,16 +148,6 @@ export default function ForInvestors() {
 
     const isAddressValid = ethers.utils.isAddress(companyAddress);
 
-    const handleSearch = () => {
-        if (isAddressValid) {
-            setIsFetching(true);
-            // Simulate data fetching process, this can be replaced with actual logic
-            setTimeout(() => {
-                setIsFetching(false);
-            }, 2000);
-        }
-    };
-
     return (
         <div className="relative p-4 pb-10 min-h-[100vh] container max-w-screen-lg mx-auto">
             <div className="fixed top-4 left-4">
@@ -157,12 +157,15 @@ export default function ForInvestors() {
                         alt="Home"
                         width={50}
                         height={50}
-                        style={{ filter: "drop-shadow(0px 0px 24px #a726a9a8)" }}
+                        style={{filter: "drop-shadow(0px 0px 24px #a726a9a8)"}}
                     />
                 </a>
             </div>
             <div className="fixed top-4 right-4">
-                <ConnectButton client={client} appMetadata={{ name: "FiledFlow - the ESG KPI Reporting System", url: "https://filedflow.lu" }} />
+                <ConnectButton client={client} appMetadata={{
+                    name: "FiledFlow - the ESG KPI Reporting System",
+                    url: "https://filedflow.lu"
+                }}/>
             </div>
             <main className="flex items-center justify-center min-h-full w-full">
                 <div className="py-20 text-center">
@@ -181,7 +184,8 @@ export default function ForInvestors() {
                         />
                     </div>
                     {isClient && isAddressValid && !isFetching && (
-                        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full mt-6 min-h-[200px] text-center">
+                        <div
+                            className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full mt-6 min-h-[200px] text-center">
                             {Object.values(kpiIdentifiers).map((kpi) => (
                                 <KPIComponent key={kpi.kpiId} companyAddress={companyAddress} kpi={kpi}/>
                             ))}
