@@ -5,15 +5,24 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
-  async rewrites() {
+  async headers() {
     return [
       {
-        source: '/:path*',
-        destination: 'https://thirdweb-esg-kpi.vercel.app/:path*',
-      },
-      {
-        source: '/:path*',
-        destination: 'https://esg.fieldflow.lu/:path*',
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: 'https://esg.fieldflow.lu',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, OPTIONS, PUT, DELETE',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Origin, Content-Type, Accept, Authorization',
+          },
+        ],
       },
     ];
   },
