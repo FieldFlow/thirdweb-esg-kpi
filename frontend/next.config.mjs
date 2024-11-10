@@ -5,31 +5,6 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
-  async redirects() {
-    return [
-      {
-        source: '/(.*)',
-        has: [
-          {
-            type: 'host',
-            value: 'fieldflow.lu',
-          },
-        ],
-        destination: 'https://esg.fieldflow.lu/:path*',
-        permanent: true,
-      },
-      {
-        source: '/(.*)',
-        has: [
-          {
-            type: 'host',
-            value: 'esg.fieldflow.lu',
-          },
-        ],
-        destination: 'https://esg.fieldflow.lu/:path*',
-        permanent: true,
-      },
-    ];
-  },};
+};
 
 export default nextConfig;
