@@ -1,4 +1,4 @@
-## Getting Started
+## Get the Thirdweb 
 
 Create a project using this example:
 
@@ -10,14 +10,12 @@ You can start editing the page by modifying `contracts/Contract.sol`.
 
 To add functionality to your contracts, you can use the `@thirdweb-dev/contracts` package which provides base contracts and extensions to inherit. The package is already installed with this project. Head to our [Contracts Extensions Docs](https://portal.thirdweb.com/contractkit) to learn more.
 
-## Building the project
+## Deploy the contract
 
 After any changes to the contract, run:
 
 ```bash
-npm run build
-# or
-yarn build
+npx thirdweb deploy -k @YOUR_SECRET_KEY@
 ```
 
 to compile your contracts. This will also detect the [Contracts Extensions Docs](https://portal.thirdweb.com/contractkit) detected on your contract.
